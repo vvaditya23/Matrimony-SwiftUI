@@ -14,6 +14,7 @@
 		480B95B22BE777D10015706B /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B95B12BE777D10015706B /* Profile.swift */; };
 		480B95B42BE77B4F0015706B /* ProfileCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B95B32BE77B4F0015706B /* ProfileCardView.swift */; };
 		480B95B62BE77BA00015706B /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B95B52BE77BA00015706B /* NetworkManager.swift */; };
+		480B95BA2BF1D2D70015706B /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B95B92BF1D2D70015706B /* FilterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		480B95B12BE777D10015706B /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		480B95B32BE77B4F0015706B /* ProfileCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCardView.swift; sourceTree = "<group>"; };
 		480B95B52BE77BA00015706B /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		480B95B92BF1D2D70015706B /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 				480B95A32BE774070015706B /* MatrimonyApp.swift */,
 				480B95B12BE777D10015706B /* Profile.swift */,
 				480B95A52BE774070015706B /* ContentView.swift */,
+				480B95B92BF1D2D70015706B /* FilterView.swift */,
 				480B95B32BE77B4F0015706B /* ProfileCardView.swift */,
 				480B95B52BE77BA00015706B /* NetworkManager.swift */,
 				480B95A72BE774090015706B /* Assets.xcassets */,
@@ -150,6 +153,7 @@
 				480B95B22BE777D10015706B /* Profile.swift in Sources */,
 				480B95B62BE77BA00015706B /* NetworkManager.swift in Sources */,
 				480B95B42BE77B4F0015706B /* ProfileCardView.swift in Sources */,
+				480B95BA2BF1D2D70015706B /* FilterView.swift in Sources */,
 				480B95A42BE774070015706B /* MatrimonyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,59 +14,78 @@ struct ContentView: View {
     let spaceName = "scroll"
     @State var wholeSize: CGSize = .zero
     @State var scrollViewSize: CGSize = .zero
+    @State var showFilterView = false
     
     var body: some View {
-        ChildSizeReader(size: $wholeSize) {
-            ScrollView {
-                ChildSizeReader(size: $scrollViewSize) {
-                    VStack(spacing: 10) {
-                        ForEach(profiles, id: \.self) { profile in
-                            ProfileCardView(profile: profile)
-                                .frame(height: wholeSize.height)
-                                .cornerRadius(20)
-                        }
-                    }
-                    .onAppear {
-                        fetchRandomProfiles()
-                    }
-                    .background(
-                        GeometryReader { proxy in
-                            Color.clear.preference(
-                                key: ViewOffsetKey.self,
-                                value: -1 * proxy.frame(in: .named(spaceName)).origin.y
-                            )
-                        }
-                    )
-                    .onPreferenceChange(
-                        ViewOffsetKey.self,
-                        perform: { value in
-                            print("offset: \(value)")
-                            print("height: \(scrollViewSize.height)")
-                            
-                            if value >= scrollViewSize.height - wholeSize.height {
-                                print("User has reached the bottom of the ScrollView.")
-                                currentPage += 1
-                                fetchRandomProfiles()
-                            } else {
-                                print("not reached.")
+        NavigationView {
+            ChildSizeReader(size: $wholeSize) {
+                ScrollView {
+                    ChildSizeReader(size: $scrollViewSize) {
+                        VStack(spacing: 10) {
+                            ForEach(profiles, id: \.self) { profile in
+                                ProfileCardView(profile: profile)
+                                    .frame(height: wholeSize.height)
+                                    .cornerRadius(20)
                             }
                         }
-                    )
-                    .padding()
+                        .onAppear {
+                            fetchRandomProfiles()
+                        }
+                        .background(
+                            GeometryReader { proxy in
+                                Color.clear.preference(
+                                    key: ViewOffsetKey.self,
+                                    value: -1 * proxy.frame(in: .named(spaceName)).origin.y
+                                )
+                            }
+                        )
+                        .onPreferenceChange(
+                            ViewOffsetKey.self,
+                            perform: { value in
+                                print("offset: \(value)")
+                                print("height: \(scrollViewSize.height)")
+                                
+                                if value >= scrollViewSize.height - wholeSize.height {
+                                    print("User has reached the bottom of the ScrollView.")
+                                    currentPage += 1
+                                    fetchRandomProfiles()
+                                } else {
+                                    print("not reached.")
+                                }
+                            }
+                        )
+                        .padding()
+                    }
+                }
+                .lineSpacing(0)
+                .listRowSpacing(0)
+                .coordinateSpace(name: spaceName)
+                .scrollIndicators(.hidden)
+                .scrollTargetBehavior(.paging)
+            }
+            .onChange(
+                of: scrollViewSize,
+                perform: { value in
+                    print(value)
+                }
+            )
+            .navigationBarTitle("Let's find the one for you...")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showFilterView.toggle()
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .foregroundColor(.black)
+                    }
+                    .sheet(isPresented: $showFilterView) {
+                        FilterView()
+                    }
+                    
                 }
             }
-            .lineSpacing(0)
-            .listRowSpacing(0)
-            .coordinateSpace(name: spaceName)
-            .scrollIndicators(.hidden)
-            .scrollTargetBehavior(.paging)
         }
-        .onChange(
-            of: scrollViewSize,
-            perform: { value in
-                print(value)
-            }
-        )
     }
     
     //API call
