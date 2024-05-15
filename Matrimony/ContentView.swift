@@ -16,6 +16,8 @@ struct ContentView: View {
     @State var scrollViewSize: CGSize = .zero
     @State var showFilterView = false
     
+    @State var genderReceived = ""
+    
     var body: some View {
         NavigationView {
             ChildSizeReader(size: $wholeSize) {
@@ -48,7 +50,29 @@ struct ContentView: View {
                                 if value >= scrollViewSize.height - wholeSize.height {
                                     print("User has reached the bottom of the ScrollView.")
                                     currentPage += 1
-                                    fetchRandomProfiles()
+                                    if genderReceived == "male" {
+                                        NetworkManager.shared.fetchRandomProfiles(page: 1, resultsPerPage: 10, gender: "male") { result in
+                                            switch result {
+                                            case .success(let fetchedProfiles):
+                                                print("Fetched profiles: \(fetchedProfiles)")
+                                                self.profiles.append(contentsOf: fetchedProfiles)
+                                            case .failure(let error):
+                                                print("Error fetching profiles: \(error)")
+                                            }
+                                        }
+                                    } else if genderReceived == "female" {
+                                        NetworkManager.shared.fetchRandomProfiles(page: 1, resultsPerPage: 10, gender: "female") { result in
+                                            switch result {
+                                            case .success(let fetchedProfiles):
+                                                print("Fetched profiles: \(fetchedProfiles)")
+                                                self.profiles.append(contentsOf: fetchedProfiles)
+                                            case .failure(let error):
+                                                print("Error fetching profiles: \(error)")
+                                            }
+                                        }
+                                    } else {
+                                        fetchRandomProfiles()
+                                    }
                                 } else {
                                     print("not reached.")
                                 }
@@ -62,6 +86,22 @@ struct ContentView: View {
                 .coordinateSpace(name: spaceName)
                 .scrollIndicators(.hidden)
                 .scrollTargetBehavior(.paging)
+                .onReceive(NotificationCenter.default.publisher(for: .GenderSelectionRefresh) , perform: { notification in
+                    profiles = []
+                    NetworkManager.shared.resetSeed()
+                    if let gender = notification.userInfo?["gender"] as? String {
+                        genderReceived = gender
+                        NetworkManager.shared.fetchRandomProfiles(page: 1, resultsPerPage: 10, gender: gender) { result in
+                            switch result {
+                            case .success(let fetchedProfiles):
+                                print("Fetched profiles: \(fetchedProfiles)")
+                                self.profiles.append(contentsOf: fetchedProfiles)
+                            case .failure(let error):
+                                print("Error fetching profiles: \(error)")
+                            }
+                        }
+                    }
+                })
             }
             .onChange(
                 of: scrollViewSize,
@@ -69,7 +109,7 @@ struct ContentView: View {
                     print(value)
                 }
             )
-            .navigationBarTitle("Let's find the one for you...")
+            .navigationBarTitle("Matches")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -80,7 +120,8 @@ struct ContentView: View {
                             .foregroundColor(.black)
                     }
                     .sheet(isPresented: $showFilterView) {
-                        FilterView()
+                        FilterView(showFilterView: $showFilterView)
+                            .interactiveDismissDisabled(true)
                     }
                     
                 }
@@ -90,7 +131,7 @@ struct ContentView: View {
     
     //API call
     func fetchRandomProfiles() {
-        NetworkManager.shared.fetchRandomProfiles(page: currentPage, resultsPerPage: 10) { result in
+        NetworkManager.shared.fetchRandomProfiles(page: currentPage, resultsPerPage: 10, gender: "") { result in
             switch result {
             case .success(let fetchedProfiles):
                 print("Fetched profiles: \(fetchedProfiles)")
@@ -140,6 +181,6 @@ struct ViewOffsetKey: PreferenceKey {
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}

@@ -12,8 +12,8 @@ class NetworkManager {
     private let baseURL = "https://randomuser.me/api/"
     private var seed: String? // Store the seed for pagination
     
-    func fetchRandomProfiles(page: Int, resultsPerPage: Int, completion: @escaping (Result<[RandomProfile], Error>) -> Void) {
-        var urlString = "\(baseURL)?page=\(page)&results=\(resultsPerPage)"
+    func fetchRandomProfiles(page: Int, resultsPerPage: Int, gender: String, completion: @escaping (Result<[RandomProfile], Error>) -> Void) {
+        var urlString = "\(baseURL)?page=\(page)&results=\(resultsPerPage)&gender=\(gender)"
         
         // Append seed parameter for pagination
         if let seed = seed {
@@ -51,5 +51,9 @@ class NetworkManager {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    func resetSeed() {
+        seed = nil
     }
 }
